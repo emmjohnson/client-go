@@ -131,6 +131,10 @@ func TestTypesInput(t *testing.T) {
 			{Name: "three", Value: 3, Type: "integer"},
 			{Name: "four", Value: 4.004, Type: "float"},
 		},
+		"map": map[string]interface{}{
+			"one one": "1.01",
+			"two":     "2.02",
+		},
 	}
 
 	sliceTests := []jsonpathTest{
@@ -172,6 +176,10 @@ func TestTypesInput(t *testing.T) {
 		// maps slice tests
 		{"mapSlice", `{ .maps }`, types,
 			`[{"name":"one","value":1},{"name":"two","value":2.02},{"name":"three","value":3.03},{"name":"four","value":4.04}]`, false},
+		// this does not work
+		{"mapSpace", `{ .map['one one'] }`, types, `1.01`, false},
+		// this works
+		{"map", `{ .map['two'] }`, types, `2.02`, false},
 		{"mapSliceIndex", `{ .maps[0] }`, types, `{"name":"one","value":1}`, false},
 		{"mapSliceIndexReverse", `{ .maps[-2] }`, types, `{"name":"three","value":3.03}`, false},
 		{"mapSubSliceFirst2", `{ .maps[0:2] }`, types, `{"name":"one","value":1} {"name":"two","value":2.02}`, false},
